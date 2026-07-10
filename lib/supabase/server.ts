@@ -1,10 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-/**
- * Cliente Supabase para uso em Server Components, Server Actions e Route Handlers.
- * Lê/escreve a sessão via cookies do Next.js.
- */
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -16,7 +12,7 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: any[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)

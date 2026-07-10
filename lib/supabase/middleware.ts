@@ -15,12 +15,17 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+
+        setAll(cookiesToSet: any[]) {
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+
           supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
         },
       },
     }
@@ -31,8 +36,12 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const rotaProtegida = ROTAS_PROTEGIDAS.some((rota) => path.startsWith(rota));
-  const rotaAuth = ROTAS_AUTH.some((rota) => path.startsWith(rota));
+  const rotaProtegida = ROTAS_PROTEGIDAS.some((rota) =>
+    path.startsWith(rota)
+  );
+  const rotaAuth = ROTAS_AUTH.some((rota) =>
+    path.startsWith(rota)
+  );
 
   if (!user && rotaProtegida) {
     const url = request.nextUrl.clone();
